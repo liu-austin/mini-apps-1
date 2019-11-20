@@ -1,5 +1,6 @@
 // jshint esversion:6
 import React from 'react';
+import axios from 'axios';
 
 class JsonReportListItem extends React.Component {
   constructor(props) {
@@ -8,13 +9,25 @@ class JsonReportListItem extends React.Component {
       report: this.props.report.text,
       id: this.props.index
     };
+    this.downloadReport = this.downloadReport.bind(this);
+  }
+
+  downloadReport(e) {
+    var event = e;
+    axios.get(`http://localhost:3000/reports/${this.state.id}`)
+    .then((()=> console.log('Downloading...')))
+    .catch(err => console.log(err))
+    .finally(() => {
+      event.preventDefault();
+      window.location.href = `http://localhost:3000/reports/${this.state.id}`;
+    });
   }
 
   render() {
     return (
       <div className='report-container'>
         <span className='report'>{this.state.report}</span>
-        <button className='button'>DOWNLOAD</button>
+        <button onClick={this.downloadReport} className='button'>DOWNLOAD</button>
       </div>
     );
   }

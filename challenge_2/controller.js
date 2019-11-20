@@ -39,7 +39,7 @@ const controller = {
         console.log(err3);
         res.status(404).send(err3);
       } else {
-        res.status(200).send(text);
+        res.download(path.join(reportDir, file), file);
       }
     });
   },
