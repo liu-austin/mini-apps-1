@@ -1,0 +1,42 @@
+#app {
+  text-align: center;
+}
+
+.center {
+  display: inline-block;
+}
+
+p {
+  font-size: 30px;
+}
+
+input {
+  width: 425px;
+  height: 75px;
+  font-size: 30px;
+}
+
+input:hover {
+  background-color: lightsalmon;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+}
+
+button:hover {
+  background-color: lightsalmon;
+}
+
+textarea:hover {
+  background-color: lightblue;
+}
+
+.report, .button {
+  display: block;
+}
+
+.report-container {
+  width: 340px;
+}
