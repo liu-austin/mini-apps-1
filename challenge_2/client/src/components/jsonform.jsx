@@ -20,7 +20,7 @@ class JsonForm extends React.Component {
   }
 
   handleSubmit(event) {
-    axios.post(`http://localhost:3000/reports`, {
+    axios.post(`/reports`, {
       jsondata: this.state.formData
     }).then(() => this.props.getReports())
     .catch(err => console.log(err));

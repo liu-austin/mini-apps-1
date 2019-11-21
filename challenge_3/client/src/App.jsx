@@ -8,32 +8,88 @@ export class App extends React.Component {
         this.state = {
            page: 'home',
            userid: null, 
-           email: ''
+           _name: '',
+           email: '',
+           _password: '',
+           line1: '',
+           line2: '',
+           _state: '',
+           zipcode: '',
+           creditcard: '',
+           expirydate: '',
+           cvv: '',
+           zipcode2: ''
         };
-        this.setEmail = this.setEmail.bind(this);
         this.findId = this.findId.bind(this);
         this.setPage = this.setPage.bind(this);
+        
+        this.nameHandleChange = this.nameHandleChange.bind(this);
+        this.emailHandleChange = this.emailHandleChange.bind(this);
+        this.passwordHandleChange = this.passwordHandleChange.bind(this);
+        this.line1HandleChange = this.line1HandleChange.bind(this);
+        this.line2HandleChange = this.line2HandleChange.bind(this);
+        this.stateHandleChange = this.stateHandleChange.bind(this);
+        this.zipcodeHandleChange = this.zipcodeHandleChange.bind(this);
+        this.creditCardHandleChange = this.creditCardHandleChange.bind(this);
+        this.expiryDateHandleChange = this.expiryDateHandleChange.bind(this);
+        this.cVVHandleChange = this.cVVHandleChange.bind(this);
+        this.zipcode2HandleChange = this.zipcode2HandleChange.bind(this);
+    }
+
+    nameHandleChange(e) {
+        this.setState({_name: e.target.value});
+    }
+
+    emailHandleChange(e) {
+        this.setState({email: e.target.value});
+    }
+
+    passwordHandleChange(e) {
+        this.setState({_password: e.target.value});
+    }
+
+    line1HandleChange(e) {
+        this.setState({line1: e.target.value});
+    }
+
+    line2HandleChange(e) {
+        this.setState({line2: e.target.value});
+    }
+
+    stateHandleChange(e) {
+        this.setState({_state: e.target.value});
+    }
+
+    zipcodeHandleChange(e) {
+        this.setState({zipcode: e.target.value});
+    }
+
+    creditCardHandleChange(e) {
+        this.setState({creditcard: e.target.value});
+    }
+
+    expiryDateHandleChange(e) {
+        this.setState({expirydate: e.target.value});
+    }
+
+    cVVHandleChange(e) {
+        this.setState({cvv: e.target.value});
+    }
+
+    zipcode2HandleChange(e) {
+        this.setState({zipcode2: e.target.value});
     }
    
     findId(email) {
-       axios.get(`http://localhost:3000/checkout/f1/${email}`)
-       .then(results => results.data)
-       .then(data => this.setState({userid: data.userid}))
+       axios.get(`/checkout/f1/${email}`)
+       .then(results => {
+            return results.data;})
+       .then(data => this.setState({userid: data[0].userid}, () => console.log(this.state.userid)))
        .catch(err => console.log(err));
    }
    
-    setEmail(email) {
-       this.setState({email: email}, () => {
-           this.findId(this.state.email);
-       });
-    }
-   
-   setPage(page) {
-       this.setState({page: page});
-   }
-   
-    componentDidMount() {
-   
+    setPage(page) {
+        this.setState({page: page});
     }
    
     render() {
@@ -41,13 +97,13 @@ export class App extends React.Component {
         if (this.state.page === 'home') {
             page = <HomePage setPage={this.setPage}/>;
         } else if (this.state.page === 'form1') {
-            page = <Form1 setEmail={this.setEmail} setPage={this.setPage}/>;
+            page = <Form1 _name={this.state._name} _password={this.state._password} email={this.state.email} nameHandleChange={this.nameHandleChange} emailHandleChange={this.emailHandleChange} passwordHandleChange={this.passwordHandleChange} setPage={this.setPage} findId={this.findId}/>;
         } else if (this.state.page === 'form2') {
-            page = <Form2 userId={this.state.userid} setPage={this.setPage}/>;
+            page = <Form2 line1={this.state.line1} line2={this.state.line2} _state={this.state._state} zipcode={this.state.zipcode} line1HandleChange={this.line1HandleChange} line2HandleChange={this.line2HandleChange} stateHandleChange={this.stateHandleChange} zipcodeHandleChange={this.zipcodeHandleChange} userId={this.state.userid} setPage={this.setPage}/>;
         } else if (this.state.page === 'form3') {
-            page = <Form3 userId={this.state.userid} setPage={this.setPage}/>;
+            page = <Form3 creditcard={this.state.creditcard} expirydate={this.state.expirydate} cvv={this.state.cvv} zipcode2={this.state.zipcode2} creditCardHandleChange={this.creditCardHandleChange} expiryDateHandleChange={this.expiryDateHandleChange} cVVHandleChange={this.cVVHandleChange} zipcode2HandleChange={this.zipcode2HandleChange} userId={this.state.userid} setPage={this.setPage}/>;
         } else {
-            page = <PurchasePage userId={this.state.userid} setPage={this.setPage}/>;
+            page = <PurchasePage setPage={this.setPage} userId={this.state.userid} _name={this.state._name} email={this.state.email} _password={this.state._password} line1={this.state.line1} line2={this.state.line2} _state={this.state._state} zipcode={this.state.zipcode} creditcard={this.state.creditcard} expirydate={this.state.expirydate} cvv={this.state.cvv} zipcode2={this.state.zipcode2}/>;
         }
         return (
             <div>
@@ -72,255 +128,140 @@ export class App extends React.Component {
        );
    }
    
-   class Form1 extends React.Component {
-       constructor(props) {
-           super(props);
-           this.state = {
-               _name: '',
-               email: '',
-               _password: ''
-           };
-           this.nameHandleChange = this.nameHandleChange.bind(this);
-           this.emailHandleChange = this.emailHandleChange.bind(this);
-           this.passwordHandleChange = this.passwordHandleChange.bind(this);
-       }
+   const Form1 = (props) => {
    
-       goToForm2(e) {
-           var event = e;
-           axios.post(`http://localhost:3000/checkout/f1`, {
-               _name: this.state._name,
-               email: this.state.email,
-               _password: this.state._password
+       const goToForm2 = (e) => {
+           axios.post(`/checkout/f1`, {
+               _name: props._name,
+               email: props.email,
+               _password: props._password
            })
            .then(() => console.log('Form 1 data submitted.'))
-           .then(() => this.props.setPage('form2'))
+           .then(() => props.findId(props.email))
+           .then(() => props.setPage('form2'))
            .catch(err => {
                console.log(err);
                alert('Form 1 data was submitted incorrectly.');
            });
-           event.preventDefault();
+           e.preventDefault();
        }
        
-       nameHandleChange(e) {
-           this.setState({_name: e.target.value});
-       }
-   
-       emailHandleChange(e) {
-           this.setState({email: e.target.value}, () => {
-               if (this.state.email.endsWith('.com')) {
-                   this.props.setEmail(this.state.email);
-               }
-           });
-       }
-   
-       passwordHandleChange(e) {
-           this.setState({_password: e.target.value});
-       }
-   
-       render() {
-           return (
+        return (
                <div>
                    <form>
                        <label>Name
-                           <input name='_name' onChange={this.nameHandleChange} value={this.state._name}/>
+                           <input name='_name' onChange={props.nameHandleChange} value={props._name}/>
                        </label>
                        <label>Email
-                           <input name='email' onChange={this.emailHandleChange} value={this.state.email}/>
+                           <input name='email' onChange={props.emailHandleChange} value={props.email}/>
                        </label>
                        <label>Password
-                           <input name='_password' onChange={this.passwordHandleChange} value={this.state._password}/>
+                           <input name='_password' onChange={props.passwordHandleChange} value={props._password}/>
                        </label>
-                       <button onClick={this.goToForm2}>Go to Shipping Form</button>
+                       <button onClick={goToForm2}>Go to Shipping Form</button>
                    </form>
                </div>
-           );
-       }
+        );
    };
    
-   class Form2 extends React.Component {
-       constructor(props) {
-           super(props);
-           this.state = {
-               line1: '',
-               line2: '',
-               _state: '',
-               zipcode: '',
-               userid: this.props.userId
-           };
-           this.line1HandleChange = this.line1HandleChange.bind(this);
-           this.line2HandleChange = this.line2HandleChange.bind(this);
-           this.stateHandleChange = this.stateHandleChange.bind(this);
-           this.zipcodeHandleChange = this.zipcodeHandleChange.bind(this);
-       }
+   const Form2 = (props) => {
    
-       goToForm3() {
-           axios.post(`http://localhost:3000/checkout/f2`, {
-               line1: this.state.line1,
-               line2: this.state.line2,
-               _state: this.state._state,
-               zipcode: this.state.zipcode,
-               userid: this.state.userid
+       const goToForm3 = () => {
+           axios.post(`/checkout/f2`, {
+               line1: props.line1,
+               line2: props.line2,
+               _state: props._state,
+               zipcode: props.zipcode,
+               userid: props.userId
            })
            .then(() => console.log('Form 2 data submitted.'))
-           .then(() => this.props.setPage('form3'))
+           .then(() => props.setPage('form3'))
            .catch(err => {
                console.log(err);
                alert('Form 2 data was submitted incorrectly.');
               });
        } 
-   
-       line1HandleChange(e) {
-           this.setState({line1: e.target.value});
-       }
-   
-       line2HandleChange(e) {
-           this.setState({line2: e.target.value});
-       }
-   
-       stateHandleChange(e) {
-           this.setState({_state: e.target.value});
-       }
-   
-       zipcodeHandleChange(e) {
-           this.setState({zipcode: e.target.value});
-       }
-   
-       render() {
-           return (
+        return (
                <div>
                    <form>
                        <label>Line 1
-                           <input name='line1' onChange={this.line1HandleChange} value={this.state.line1}/>
+                           <input name='line1' onChange={props.line1HandleChange} value={props.line1}/>
                        </label>
                        <label>Line 2
-                           <input name='line2' onChange={this.line2HandleChange} value={this.state.line2}/>
+                           <input name='line2' onChange={props.line2HandleChange} value={props.line2}/>
                        </label>
                        <label>State
-                           <input name='_state' onChange={this.stateHandleChange} value={this.state._state}/>
+                           <input name='_state' onChange={props.stateHandleChange} value={props._state}/>
                        </label>
                        <label>State
-                           <input name='zipcode' onChange={this.zipcodeHandleChange} value={this.state.zipcode}/>
+                           <input name='zipcode' onChange={props.zipcodeHandleChange} value={props.zipcode}/>
                        </label>
-                       <button onClick={this.goToForm3}>Go to Billing Form</button>
+                       <button onClick={goToForm3}>Go to Billing Form</button>
                    </form>
                </div>
            );
-       }
-   
    };
    
-   class Form3 extends React.Component {
-       constructor(props) {
-           super(props);
-           this.state = {
-               creditcard: '',
-               expirydate: '',
-               cvv: '',
-               zipcode2: '',
-               userid: this.props.userId
-           };
-           this.creditCardHandleChange = this.creditCardHandleChange.bind(this);
-           this.expiryDateHandleChange = this.expiryDateHandleChange.bind(this);
-           this.cVVHandleChange = this.cVVHandleChange.bind(this);
-           this.zipcode2HandleChange = this.zipcode2HandleChange.bind(this);
-       }
-   
-       creditCardHandleChange(e) {
-           this.setState({creditcard: e.target.value});
-       }
-   
-       expiryDateHandleChange(e) {
-           this.setState({expirydate: e.target.value});
-       }
-   
-       cVVHandleChange(e) {
-           this.setState({cvv: e.target.value});
-       }
-   
-       zipcode2HandleChange(e) {
-           this.setState({zipcode2: e.target.value});
-       }
-   
-       goToPurchase() {
-           axios.post(`http://localhost:3000/checkout/f3`, {
-               creditcard: this.state.creditcard,
-               expirydate: this.state.expirydate,
-               cvv: this.state.cvv,
-               zipcode: this.state.zipcode2,
-               userid: this.state.userid
+   const Form3 = (props) => {
+       const goToPurchase = () => {
+           axios.post(`/checkout/f3`, {
+               creditcard: props.creditcard,
+               expirydate: props.expirydate,
+               cvv: props.cvv,
+               zipcode: props.zipcode2,
+               userid: props.userId
            })
            .then(() => console.log('Form 3 data submitted.'))
-           .then(() => this.props.setPage('purchase'))
+           .then(() => props.setPage('purchase'))
            .catch(err => {
                console.log(err);
                alert('Form 3 data was submitted incorrectly.');
               });
        }
    
-       render() {
-           return (
-               <div>
-               <form>
-                   <label>Credit Card #
-                       <input name='line1' onChange={this.creditCardHandleChange} value={this.state.creditcard}/>
-                   </label>
-                   <label>Expiration Date
-                       <input name='line2' onChange={this.expiryDateHandleChange} value={this.state.expirydate}/>
-                   </label>
-                   <label>CVV
-                       <input name='_state' onChange={this.cVVHandleChange} value={this.state.cvv}/>
-                   </label>
-                   <label>Zip Code
-                       <input name='zipcode' onChange={this.zipcode2HandleChange} value={this.state.zipcode2}/>
-                   </label>
-                   <button onClick={this.goToPurchase}>Go to Purchase</button>
-               </form>
-           </div>
-           );
-       }
+        return (
+            <div>
+            <form>
+                <label>Credit Card #
+                    <input name='line1' onChange={props.creditCardHandleChange} value={props.creditcard}/>
+                </label>
+                <label>Expiration Date
+                    <input name='line2' onChange={props.expiryDateHandleChange} value={props.expirydate}/>
+                </label>
+                <label>CVV
+                    <input name='_state' onChange={props.cVVHandleChange} value={props.cvv}/>
+                </label>
+                <label>Zip Code
+                    <input name='zipcode' onChange={props.zipcode2HandleChange} value={props.zipcode2}/>
+                </label>
+                <button onClick={goToPurchase}>Go to Purchase</button>
+            </form>
+        </div>
+        );
    };
    
-   class PurchasePage extends React.Component {
-       constructor(props) {
-           super(props);
-           this.state = {
-               data: null
-           };
-       }
-       goToHome() {
-           this.props.setPage('home');
-       }
-   
-       componentDidMount() {
-           axios.get(`http://localhost:3000/checkout/all/${this.props.userId}`)
-           .then(results => results.data)
-           .then(data => this.setState({data}))
-           .catch(err => console.log(err));
-       }
-   
-       render() {
-           return (
+   const PurchasePage = (props) => {
+       const goToHome = () => {
+           props.setPage('home');
+       };
+
+        return (
                <div>
                    <div>
-                   {
-                       this.state.data ? 
-                       (
-                           Object.keys(this.state.data).map(key => {
-                               return (
-                                   <span>{`${this.state.data[key]}\n`}</span>
-                               );
-                           })
-                       ) 
-                       : 
-                       (
-                           null
-                       )
-                   }
+                    <span>{`${props._name}\n`}</span>
+                    <span>{`${props.email}\n`}</span>
+                    <span>{`${props._password}\n`}</span>
+                    <span>{`${props.line1}\n`}</span>
+                    <span>{`${props.line2}\n`}</span>
+                    <span>{`${props._state}\n`}</span>
+                    <span>{`${props.zipcode}\n`}</span>
+                    <span>{`${props.creditcard}\n`}</span>
+                    <span>{`${props.expirydate}\n`}</span>
+                    <span>{`${props.cvv}\n`}</span>
+                    <span>{`${props.zipcode2}\n`}</span>
                    </div>
-                   <button onClick={this.goToHome}>Go to Home</button>
+                   <button onClick={goToHome}>Go to Home</button>
                </div>
            );
-       }
-   
-   };
+    }
    

@@ -14,7 +14,7 @@ class App extends React.Component {
   }
 
   getReports() {
-    axios.get(`http://localhost:3000/reports`)
+    axios.get(`/reports`)
     .then(results => results.data)
     .then(data => this.setState({reports: data}))
     .then(() => console.log(this.state.reports))

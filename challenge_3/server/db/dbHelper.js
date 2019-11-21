@@ -13,10 +13,12 @@ const dbHelpers = {
     },
 
     getUser: (req, cb) => {
-        db.query((`select * from f1 where _email = ${req.params.email}`), (err, results) => {
+        console.log(req.params);
+        db.query((`select * from f1 where email = "${req.params.email}"`), (err, results) => {
             if (err) {
                 cb(err);
             } else {
+                console.log(results);
                 cb(null, results);
             }
         });

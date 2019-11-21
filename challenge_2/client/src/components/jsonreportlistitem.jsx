@@ -14,12 +14,12 @@ class JsonReportListItem extends React.Component {
 
   downloadReport(e) {
     var event = e;
-    axios.get(`http://localhost:3000/reports/${this.state.id}`)
+    axios.get(`/reports/${this.state.id}`)
     .then((()=> console.log('Downloading...')))
     .catch(err => console.log(err))
     .finally(() => {
       event.preventDefault();
-      window.location.href = `http://localhost:3000/reports/${this.state.id}`;
+      window.location.href = `/reports/${this.state.id}`;
     });
   }
 
