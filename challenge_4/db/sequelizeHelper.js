@@ -27,7 +27,6 @@ const sequelizeHelper = {
             if (rowData.dataValues[`col${colnum}`]) {
                 sequelizeHelper.addPiece(colnum, player, rowid + 1);
             } else {
-
                 return rowData.update({[`col${colnum}`]: player > 0 ? 1 : -1});
             }
         });

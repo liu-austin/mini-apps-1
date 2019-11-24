@@ -166,8 +166,9 @@ export class App extends React.Component {
    
    const Form2 = (props) => {
    
-       const goToForm3 = () => {
+       const goToForm3 = (e) => {
            axios.post(`/checkout/f2`, {
+            
                line1: props.line1,
                line2: props.line2,
                _state: props._state,
@@ -180,6 +181,7 @@ export class App extends React.Component {
                console.log(err);
                alert('Form 2 data was submitted incorrectly.');
               });
+            e.preventDefault();
        } 
         return (
                <div>
@@ -193,7 +195,7 @@ export class App extends React.Component {
                        <label>State
                            <input name='_state' onChange={props.stateHandleChange} value={props._state}/>
                        </label>
-                       <label>State
+                       <label>Zip Code
                            <input name='zipcode' onChange={props.zipcodeHandleChange} value={props.zipcode}/>
                        </label>
                        <button onClick={goToForm3}>Go to Billing Form</button>
@@ -203,7 +205,8 @@ export class App extends React.Component {
    };
    
    const Form3 = (props) => {
-       const goToPurchase = () => {
+       const goToPurchase = (e) => {
+
            axios.post(`/checkout/f3`, {
                creditcard: props.creditcard,
                expirydate: props.expirydate,
@@ -217,6 +220,7 @@ export class App extends React.Component {
                console.log(err);
                alert('Form 3 data was submitted incorrectly.');
               });
+            e.preventDefault();
        }
    
         return (

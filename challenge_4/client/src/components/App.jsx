@@ -81,9 +81,7 @@ class App extends React.Component {
             }
             for (let j = 0; j < 6; j++) {
                 if (this.state.rows[j][j + i] !== undefined) {
-                    // console.log(this.state.rows[j][j+i]);
                     if (this.state.rows[j][j + i] === color) {
-                        
                         streak += 1;
                         if (streak === 4) {
                             this.setState({win: true});
@@ -104,7 +102,6 @@ class App extends React.Component {
             for (let j = 0; j < 7; j++) {
                 if (this.state.rows[i + j] !== undefined) {
                     if (this.state.rows[i + j][6 - j] !== undefined) {
-                        // console.log(this.state.rows[j][j+i]);
                         if (this.state.rows[i + j][6 - j] === color) {
                             streak += 1;
                             if (streak === 4) {
@@ -147,15 +144,16 @@ class App extends React.Component {
     }
 
     render() {
-        let winner = this.state.player === -1 ? 'PLAYER 1' : 'PLAYER 2';
+        let winner = this.state.player === -1 ? 'RED' : 'BLACK';
+        let currentPlayer = this.state.player ===  1 ? 'RED' : 'BLACK';
         return (
             <div className='app'>
                 <h1 className='title'>CONNECT FOUR</h1>
+                <h1>{`CURRENT PLAYER: ${currentPlayer}`}</h1>
                 <GameBoard player={this.state.player} addPiece={this.addPiece} rows={this.state.rows}/>
                 {
                     this.state.win ? 
                     (
-
                         <h1>{`${winner} WINS !`}</h1>
                     ) 
                     : 
@@ -169,4 +167,3 @@ class App extends React.Component {
 }
 
 export default App;
-

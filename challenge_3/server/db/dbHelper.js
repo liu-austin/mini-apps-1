@@ -42,7 +42,8 @@ const dbHelpers = {
         });
     },
     postShipping: (req, cb) => {
-        db.query((`insert into f2 (line1, line2, _state, zipcode, userid) values ("${req.body.line1}", "${req.body.line2}", "${req.body._state}", "${req.body.zipcode}", "${req.body.userid}")`), (err, results) => {
+        console.log(req.body);
+        db.query((`insert into f2 (line1, line2, _state, zipcode, userid) values ("${req.body.line1}", "${req.body.line2}", "${req.body._state}", "${req.body.zipcode}", ${req.body.userid})`), (err, results) => {
             if (err) {
                 cb(err);
             } else {
